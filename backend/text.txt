@@ -1,0 +1,85 @@
+backend structure
+
+backend/
+├── node_modules/
+├── config/
+│   ├── cloudinary.js
+│   ├── multer.js
+│   ├── db.js
+│   ├── passport.js
+├── controllers/
+│   ├── adminController.js
+│   ├── authController.js
+│   ├── categoryController.js
+│   ├── productController.js
+│   ├── typeController.js
+├── middlewares/
+│   ├── authMiddleware.js
+│   ├── errorMiddleware.js
+│   ├── roleMiddleware.js
+├── models/
+│   ├── Category.js
+│   ├── Product.js
+│   ├── Type.js
+│   ├── User.js
+├── routes/
+│   ├── adminRoutes.js
+│   ├── authRoutes.js
+│   ├── categoryRoutes.js
+│   ├── productRoutes.js
+│   ├── typeRoutes.js
+├── utils/
+│   ├── generateToken.js
+├── .env
+├── app.js
+├── package-lock.json
+├── package.json
+├── server.js
+
+
+
+
+
+
+categories id = 6877c4df85fb0ef334ee0302
+type id = 6877c5a185fb0ef334ee0306
+
+user 2 id = 6877ca6385fb0ef334ee031d
+
+for handling google auth....... in frontend
+useEffect(() => {
+  const token = new URLSearchParams(window.location.search).get("token");
+  if (token) {
+    localStorage.setItem("token", token);
+    navigate("/dashboard"); // or any protected page
+  }
+}, []);
+
+
+client id = 24353433286-oecmeg7l2agjebope20t8rse5f4342d1.apps.googleusercontent.com
+client secret = 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
+
+Users 
+user1
+admin token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NzdiZTA2ODVmYjBlZjMzNGVlMDJlMCIsImlhdCI6MTc1Mjg0NTAxMywiZXhwIjoxNzU1NDM3MDEzfQ.G5VjMHl2G26gXW677FipJ2F8gHEmuDmLKO7klCzWUnk
+
+categories
+electronics id = 6877c4df85fb0ef334ee0302
+fashion id = 687a4ce9bce4b85d05a095bd
+books id = 687a4cf1bce4b85d05a095c0
+home & kitchen id = 687a4cfebce4b85d05a095c3
+toys id = 687a4d05bce4b85d05a095c6
+
+Electronics Types
+smartphone id = 6877c5a185fb0ef334ee0306
+laptops id =  687a4e35bce4b85d05a095cb
+tablets id = 687a4e59bce4b85d05a095ce
+cameras id = 687a4e65bce4b85d05a095d1
+wearables id = 687a4e72bce4b85d05a095d4
+
+Electronics -> Smartphone -> products
+iPhone 14 Pro id = 687a4fc2bce4b85d05a095da
+Samsung Galaxy S23 Ultra id = 687a503dbce4b85d05a095dd
+Google Pixel 8 id = 687a5072bce4b85d05a095e0
+OnePlus 11R id = 687a509dbce4b85d05a095e3
+Xiaomi 13 Pro id = 687a50d3bce4b85d05a095e6

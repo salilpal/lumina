@@ -1,0 +1,167 @@
+frontend/
+├── public/
+├── src/
+│   ├── assets/             → images, icons, static files
+│   ├── components/         → reusable components (Navbar, Footer, Loader)
+│   ├── layouts/            → layout wrappers (AdminLayout, UserLayout)
+│   ├── pages/              → individual pages (Home, ProductPage, Login)
+│   ├── features/           → feature folders (auth, products, cart, admin)
+│   │   ├── auth/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   └── authSlice.js (if using Redux Toolkit)
+│   ├── context/            → auth & cart context (if not using Redux)
+│   ├── services/           → API calls (axios configs)
+│   ├── routes/             → Route components, PrivateRoute, etc.
+│   ├── hooks/              → custom hooks (useAuth, useDebounce, etc.)
+│   ├── utils/              → helper functions, slugify, formatters
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── tailwind.config.js
+├── package.json
+└── vite.config.js
+
+frontend structure
+
+frontend/
+├── public/
+│   └── favicon.svg
+│   └── logo.png
+│   └── robots.txt
+│   └── index.html
+│
+├── src/
+│   │
+│   │
+│   ├── app/
+│   │   └── store.js
+│   │
+│   ├── assets/
+│   │   └── logo.svg
+│   │   └── placeholder.jpg
+│   │   └── loader.svg
+│   │
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── Loader.jsx
+│   │   │   ├── Button.jsx
+│   │   │   ├── InputField.jsx
+│   │   │   └── Modal.jsx
+│   │   ├── layout/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   └── Sidebar.jsx
+│   │   └── product/
+│   │       ├── ProductCard.jsx
+│   │       ├── ProductFilter.jsx
+│   │       └── ProductGrid.jsx
+│   │
+│   ├── layouts/
+│   │   ├── UserLayout.jsx
+│   │   └── AdminLayout.jsx
+│   │
+│   ├── pages/
+│   │   ├── About.jsx
+│   │   ├── AllCategories.jsx
+│   │   └── CartPage.jsx
+│   │   └── CategoryTypes.jsx
+│   │   ├── Contact.jsx
+│   │   ├── Home.jsx
+│   │   ├── NotFound.jsx
+│   │   ├── ProductDetails.jsx
+│   │   ├── SearchResults.jsx
+│   │   ├── TypeProducts.jsx
+│   │
+│   ├── features/
+│   │   ├── auth/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   ├── authSlice.js
+│   │   │   └── GoogleCallback.jsx
+│   │   │   └── GoogleSuccess.jsx
+│   │   ├── admin/
+│   │   │   ├── products/
+│   │   │   │   ├── productSlice.js
+│   │   │   │   └── ProductCreate.jsx
+│   │   │   └── CategoryManager.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── ProductList.jsx
+│   │   │   ├── ProductsByType.jsx
+│   │   │   ├── TypesByCategory.jsx
+│   │   │   ├── UserList.jsx
+│   │   └── cart/
+│   │       ├── cartSlice.js
+│   │       └── CartSummary.jsx
+│   │
+│   ├── context/
+│   │   ├── AuthContext.jsx
+│   │   └── CartContext.jsx
+│   │
+│   ├── services/
+│   │   ├── axios.js
+│   │   ├── authService.js
+│   │   ├── categoryService.js
+│   │   ├── typeService.js
+│   │   ├── productService.js
+│   │   └── userService.js
+│   │
+│   ├── routes/
+│   │   ├── AppRoutes.jsx
+│   │   ├── AdminRoutes.jsx
+│   │   ├── PrivateRoute.jsx
+│   │   └── PublicRoute.jsx
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.js
+│   │   ├── useDebounce.js
+│   │   └── useCart.js
+│   │
+│   ├── utils/
+│   │   ├── slugify.js
+│   │   ├── formatCurrency.js
+│   │   └── tokenHelper.js
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+│
+├── .env
+├── .gitignore
+├── eslintconfig.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── README.md
+└── vite.config.js
+
+detailed frontend structure
+
+
+import { getAllUsers, deleteUser, makeAdmin } from "../services/userService";
+
+const handleDelete = async (id) => {
+  try {
+    await deleteUser(id);
+    // refresh user list or show feedback
+  } catch (error) {
+    console.error("Failed to delete user", error);
+  }
+};
+
+const handleMakeAdmin = async (id) => {
+  try {
+    const updatedUser = await makeAdmin(id);
+    // update state/UI accordingly
+  } catch (error) {
+    console.error("Failed to make user admin", error);
+  }
+};
+
+
+pages ->
+home
+categories
+Types
+product 
