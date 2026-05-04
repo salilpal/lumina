@@ -1,39 +1,37 @@
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const User = require("../models/User"); // adjust path as needed
+const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs"); // Highly recommended for password security
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        // Check if user exists
-        let user = await User.findOne({ googleId: profile.id });
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
 
-        if (!user) {
-          // Create user if doesn't exist
-          user = await User.create({
-            name: profile.displayName,
-            email: profile.emails[0].value,
-            googleId: profile.id,
-            password: "google-auth", // placeholder (won’t be used)
-          });
-        }
-
-        // JWT Token Generation
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: "7d",
-        });
-
-        return done(null, { user, token });
-      } catch (err) {
-        return done(err, false);
-      }
+  try {
+    // 1. Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
-  )
-);
+
+    // 2. Verify password (assuming you use bcrypt to hash)
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // 3. Generate JWT (reusing your logic)
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+      token,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};

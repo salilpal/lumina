@@ -41,7 +41,6 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/categories", require("./routes/categoryRoutes"));
 app.use("/api/types", require("./routes/typeRoutes"));
 app.use("/api/products", require("./routes/productRoutes"));
-app.use("/api/admin", require("./routes/adminRoutes"));
 
 app.get("/", (req, res) => res.send("API is working ✅"));
 
