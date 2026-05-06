@@ -39,19 +39,11 @@ exports.getCategoryById = async (req, res) => {
 exports.createCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    let imageUrl = null;
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(
-        req.file.path || req.file.buffer,
-        {
-          folder: "categories", // optional
-        }
-      );
-      imageUrl = result.secure_url;
-    }
+    const imageUrl = req.file ? req.file.path : null;
 
     const category = new Category({ name, image: imageUrl });
     await category.save();
+
     res.status(201).json(category);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -70,13 +62,7 @@ exports.updateCategory = async (req, res) => {
     let imageUrl = category.image;
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload(
-        req.file.path || req.file.buffer,
-        {
-          folder: "categories",
-        }
-      );
-      imageUrl = result.secure_url;
+      imageUrl = req.file.path;
     }
 
     category.name = name || category.name;

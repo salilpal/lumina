@@ -1,5 +1,7 @@
+// app.js
+require("dotenv").config();
 const express = require("express");
-const dotenv = require("dotenv");
+
 const cors = require("cors");
 const helmet = require("helmet");
 // const xss = require("xss-clean");
@@ -9,7 +11,7 @@ const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/errorHandler");
 
-dotenv.config();
+
 
 connectDB();
 

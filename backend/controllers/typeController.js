@@ -49,19 +49,16 @@ exports.getTypesByCategory = async (req, res) => {
 exports.createType = async (req, res) => {
   try {
     const { name, category } = req.body;
-    let imageUrl = null;
+    
+    // Multer handles the upload; we just grab the path
+    const imageUrl = req.file ? req.file.path : null;
 
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(
-        req.file.path || req.file.buffer,
-        {
-          folder: "types",
-        }
-      );
-      imageUrl = result.secure_url;
-    }
-
-    const type = new Type({ name, category, image: imageUrl });
+    const type = new Type({ 
+      name, 
+      category, // Ensure this is a 24-char Category ID from Postman
+      image: imageUrl 
+    });
+    
     await type.save();
     res.status(201).json(type);
   } catch (error) {
@@ -73,20 +70,12 @@ exports.updateType = async (req, res) => {
   try {
     const { name, category } = req.body;
     const type = await Type.findById(req.params.id);
-    if (!type) {
-      return res.status(404).json({ message: "Type not found" });
-    }
+    
+    if (!type) return res.status(404).json({ message: "Type not found" });
 
     let imageUrl = type.image;
-
     if (req.file) {
-      const result = await cloudinary.uploader.upload(
-        req.file.path || req.file.buffer,
-        {
-          folder: "types",
-        }
-      );
-      imageUrl = result.secure_url;
+      imageUrl = req.file.path; // Simply use the new path from Multer
     }
 
     type.name = name || type.name;
