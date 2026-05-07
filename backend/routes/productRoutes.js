@@ -22,7 +22,7 @@ router.get("/:id", getProductById);
 
 // Protected Routes (Require JWT)
 // Note: We use upload.single("image") to handle the file from Postman
-router.post("/", protect, upload.single("image"), createProduct);
+router.post("/", upload.array("images", 5), createProduct);
 router.put("/:id", protect, upload.single("image"), updateProduct);
 router.delete("/:id", protect, deleteProduct);
 

@@ -15,7 +15,6 @@ import CartPage from "../pages/CartPage";
 import Login from "../features/auth/Login";
 import Register from "../features/auth/Register";
 import Profile from "../features/auth/Profile";
-import GoogleCallback from "../features/auth/googleCallback";
 
 import ProductCreate from "../features/admin/products/ProductCreate";
 import Dashboard from "../features/admin/Dashboard";
@@ -30,7 +29,6 @@ import AdminRoutes from "./AdminRoutes";
 import UserLayout from "../layouts/UserLayout";
 import AdminLayout from "../layouts/AdminLayout";
 
-import GoogleSuccess from "../features/auth/GoogleSuccess";
 
 const AppRoutes = () => {
   return (
@@ -49,8 +47,6 @@ const AppRoutes = () => {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/auth/google/callback" element={<GoogleCallback />} />
-        <Route path="/login-success" element={<GoogleSuccess />} />
 
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
@@ -58,7 +54,7 @@ const AppRoutes = () => {
       </Route>
 
       {/* Admin Routes */}
-      <Route element={<AdminRoutes />}>
+      <Route element={<PrivateRoute />}>
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/users" element={<UserList />} />

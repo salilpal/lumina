@@ -3,7 +3,14 @@ import axios from "./axios";
 
 export const getAllProducts = async () => {
   const res = await axios.get("/products");
-  return res.data; // assuming res.data is an array of products
+  return res.data; 
+};
+
+// Fetch products based on the Type Slug (used in TypeProducts.jsx)
+export const getProductsByType = async (typeId) => {
+  // We send the ID to the backend to get a precise match
+  const res = await axios.get(`/products/type/${typeId}`);
+  return res.data.products || res.data;
 };
 
 export const getProductBySlug = async (slug) => {
@@ -12,27 +19,17 @@ export const getProductBySlug = async (slug) => {
 };
 
 export const createProduct = async (data) => {
-  if (data instanceof FormData) {
-    const res = await axios.post("/products", data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    return res.data;
-  } else {
-    const res = await axios.post("/products", data);
-    return res.data;
-  }
+  // If data is FormData, axios handles headers automatically; 
+  // but explicitly setting it is safer for clarity.
+  const config = data instanceof FormData ? { headers: { "Content-Type": "multipart/form-data" } } : {};
+  const res = await axios.post("/products", data, config);
+  return res.data;
 };
 
 export const updateProduct = async (id, data) => {
-  if (data instanceof FormData) {
-    const res = await axios.put(`/products/${id}`, data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    return res.data;
-  } else {
-    const res = await axios.put(`/products/${id}`, data);
-    return res.data;
-  }
+  const config = data instanceof FormData ? { headers: { "Content-Type": "multipart/form-data" } } : {};
+  const res = await axios.put(`/products/${id}`, data, config);
+  return res.data;
 };
 
 export const deleteProduct = async (id) => {
@@ -54,8 +51,10 @@ export const searchProducts = async (keyword) => {
   return res.data.products || res.data;
 };
 
-export default {
+// Standardizing exports
+const productService = {
   getAllProducts,
+  getProductsByType, // Added to default export
   getProductBySlug,
   createProduct,
   updateProduct,
@@ -63,3 +62,5 @@ export default {
   getProductsByCategory,
   searchProducts,
 };
+
+export default productService;

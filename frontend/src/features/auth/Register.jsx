@@ -1,3 +1,4 @@
+// src/features/auth/Register.jsx
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { register } from "./authSlice";
@@ -6,7 +7,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Only for Register
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -27,38 +28,36 @@ const Register = () => {
       setPasswordError("Passwords do not match");
       return;
     }
+    setPasswordError(""); // Clear error if passwords match
     try {
-      await dispatch(register(form)).unwrap();
+      await dispatch(register({ 
+        name: form.name, 
+        email: form.email, 
+        password: form.password 
+      })).unwrap();
       navigate("/login");
     } catch (err) {
-      alert("Registration failed");
+      // It's better to show the actual error message from the backend
+      alert(err || "Registration failed");
     }
   };
 
-  const googleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google`;
-  };
+  // Removed googleLogin function
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">
+      <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
         Sign Up
       </h2>
 
-      <button
-        type="button"
-        onClick={googleLogin}
-        className="w-full bg-red-500 text-white py-2 rounded-lg cursor-pointer my-2 mb-6"
-      >
-        Sign Up with Google
-      </button>
+      {/* Removed Google Sign-Up Button */}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
           name="name"
           placeholder="Name"
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={form.name}
           onChange={handleChange}
           required
@@ -67,17 +66,18 @@ const Register = () => {
           type="email"
           name="email"
           placeholder="Email"
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={form.email}
           onChange={handleChange}
           required
         />
+        
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
-            className="w-full border p-2 rounded pr-10"
+            className="w-full border p-2 rounded pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
             value={form.password}
             onChange={handleChange}
             required
@@ -95,7 +95,7 @@ const Register = () => {
             type={showConfirmPassword ? "text" : "password"}
             name="confirmPassword"
             placeholder="Confirm Password"
-            className="w-full border p-2 rounded pr-10"
+            className="w-full border p-2 rounded pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
             value={form.confirmPassword}
             onChange={handleChange}
             required
@@ -109,19 +109,20 @@ const Register = () => {
         </div>
 
         {passwordError && (
-          <p className="text-red-500 text-sm">{passwordError}</p>
+          <p className="text-red-500 text-sm font-medium">{passwordError}</p>
         )}
+        
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition duration-200 font-semibold"
         >
           Register
         </button>
       </form>
 
-      <p className="text-center mt-4 text-sm text-gray-600">
+      <p className="text-center mt-6 text-sm text-gray-600">
         Already registered?{" "}
-        <Link to="/login" className="text-blue-600 underline">
+        <Link to="/login" className="text-blue-600 hover:underline font-medium">
           Sign In
         </Link>
       </p>

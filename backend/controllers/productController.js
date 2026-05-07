@@ -1,5 +1,6 @@
 // controllers/productController.js
 const Product = require("../models/Product");
+const Type = require("../models/Type");
 const { cloudinary } = require("../config/cloudinary");
 
 exports.getProducts = async (req, res) => {
@@ -39,11 +40,21 @@ exports.getProducts = async (req, res) => {
 };
 
 exports.getProductsByType = async (req, res) => {
-  const { typeId } = req.params;
-  const products = await Product.find({ type: typeId }).populate(
-    "category type",
-  );
-  res.json(products);
+  try {
+    const { typeId } = req.params;
+
+    // Direct find using the ID passed from frontend
+    const products = await Product.find({ type: typeId })
+      .populate("category")
+      .populate("type");
+
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching products", error: error.message });
+  }
 };
 
 exports.getProductById = async (req, res) => {

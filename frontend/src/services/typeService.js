@@ -1,9 +1,19 @@
+// src/services/typeService.js
 import axios from "./axios";
 
-// Fetch all types (optionally filtered by category)
-export const getTypes = (categoryId) => {
-  const url = categoryId ? `/types?category=${categoryId}` : "/types";
-  return axios.get(url).then((res) => res.data);
+// Fetch all types (general)
+export const getTypes = () => {
+  return axios.get("/types").then((res) => res.data);
+};
+
+// Fetch types for a specific category (This fixes your Import Error)
+export const getTypesByCategory = (categoryId) => {
+  return axios.get(`/types?category=${categoryId}`).then((res) => res.data);
+};
+
+export const getTypeBySlug = async (slug) => {
+  const res = await axios.get(`/types/slug/${encodeURIComponent(slug)}`);
+  return res.data; // Ensure your backend has this route
 };
 
 // Fetch single type by ID
@@ -11,7 +21,7 @@ export const getTypeById = (id) => {
   return axios.get(`/types/${id}`).then((res) => res.data);
 };
 
-// Create new type
+// Create new type (Expects FormData for images)
 export const createType = (typeData) => {
   return axios.post("/types", typeData).then((res) => res.data);
 };

@@ -6,6 +6,7 @@ const {
   getTypesByCategory, // Add this
   updateType,
   deleteType,
+  getTypeBySlug
 } = require("../controllers/typeController");
 const { protect } = require("../middlewares/authMiddleware");
 const upload = require("../config/multer");
@@ -16,6 +17,7 @@ const router = express.Router();
 router.get("/", getTypes);
 router.get("/:id", getTypeById);
 router.get("/category/:categoryId", getTypesByCategory); // Add this route
+router.get("/slug/:slug", getTypeBySlug);
 
 // Protected Management Routes (The missing piece causing the 404)
 router.post("/", protect, upload.single("image"), createType);

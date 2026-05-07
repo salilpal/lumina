@@ -1,17 +1,16 @@
-// src/features/auth/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   loginUser,
   registerUser,
   getMe,
-  googleLogin,
-} from "../../services/authService";
+} from "../../services/authService"; // Removed googleLogin import
 import {
   getTokenFromStorage as getToken,
   setTokenToStorage as setToken,
   removeTokenFromStorage as removeToken,
 } from "../../utils/tokenHelper";
 
+// Initial user load logic
 let storedUser = null;
 try {
   const userData = localStorage.getItem("user");
@@ -27,15 +26,17 @@ const initialState = {
   user: storedUser,
   token: getToken(),
   status: "idle",
-  loading: false, // ✅ added
+  loading: false,
   error: null,
 };
 
+// --- Async Thunks ---
+
 export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
   try {
-    const res = await loginUser(data); // res should have user and token
-    setToken(res.token); // store token in localStorage
-    return { user: res.user, token: res.token }; // return both
+    const res = await loginUser(data); 
+    setToken(res.token); 
+    return { user: res.user, token: res.token }; 
   } catch (err) {
     const message =
       err.response?.data?.message || "Login failed. Please try again.";
@@ -69,21 +70,11 @@ export const fetchMe = createAsyncThunk("auth/fetchMe", async (_, thunkAPI) => {
 
 export const logout = createAsyncThunk("auth/logout", async () => {
   removeToken();
+  localStorage.removeItem("user");
   return null;
 });
 
-export const googleAuth = createAsyncThunk(
-  "auth/googleAuth",
-  async (token, thunkAPI) => {
-    try {
-      const res = await googleLogin(token);
-      setToken(res.token);
-      return { user: res.user, token: res.token };
-    } catch (err) {
-      return thunkAPI.rejectWithValue("Google login failed");
-    }
-  }
-);
+// REMOVED: googleAuth AsyncThunk
 
 const authSlice = createSlice({
   name: "auth",
@@ -92,57 +83,55 @@ const authSlice = createSlice({
   extraReducers(builder) {
     builder
       // LOGIN
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.status = "succeeded";
+        state.loading = false;
         state.error = null;
         localStorage.setItem("user", JSON.stringify(action.payload.user));
-        setToken(action.payload.token); // keep token in localStorage and in state
       })
-
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
+        state.loading = false;
         state.error = action.payload;
       })
 
-      // GOOGLE LOGIN
-      .addCase(googleAuth.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.status = "succeeded";
-        state.error = null;
-        localStorage.setItem("user", JSON.stringify(action.payload));
-      })
-      .addCase(googleAuth.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
+      // REMOVED: googleAuth builders
 
       // REGISTER
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(register.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = "succeeded";
+        state.loading = false;
         state.error = null;
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(register.rejected, (state, action) => {
         state.status = "failed";
+        state.loading = false;
         state.error = action.payload;
       })
 
       // FETCH ME
       .addCase(fetchMe.pending, (state) => {
-        state.loading = true; // ✅ added
+        state.loading = true;
       })
       .addCase(fetchMe.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = "succeeded";
-        state.loading = false; // ✅ added
+        state.loading = false;
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(fetchMe.rejected, (state, action) => {
         state.status = "failed";
-        state.loading = false; // ✅ added
+        state.loading = false;
         state.error = action.payload;
         state.user = null;
         removeToken();
@@ -152,11 +141,10 @@ const authSlice = createSlice({
       // LOGOUT
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+        state.token = null;
         state.status = "idle";
         state.loading = false;
         state.error = null;
-        removeToken();
-        localStorage.removeItem("user");
       });
   },
 });

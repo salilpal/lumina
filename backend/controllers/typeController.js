@@ -46,6 +46,16 @@ exports.getTypesByCategory = async (req, res) => {
   res.json(types);
 };
 
+exports.getTypeBySlug = async (req, res) => {
+  try {
+    const type = await Type.findOne({ slug: req.params.slug });
+    if (!type) return res.status(404).json({ message: "Type not found" });
+    res.json(type);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.createType = async (req, res) => {
   try {
     const { name, category } = req.body;

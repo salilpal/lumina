@@ -27,7 +27,7 @@ const productSchema = new mongoose.Schema(
       required: [true, "Please enter stock count"],
       default: 0 
     },
-    images: [String],
+    images: [{ type: String }],
     category: { 
       type: mongoose.Schema.Types.ObjectId, 
       ref: "Category",
